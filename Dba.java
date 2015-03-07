@@ -15,11 +15,10 @@ public class Dba
     /** fetch data from DBA
      * @return an arraylist containg all links to items
      */
-    public static ArrayList<String> fetchData() {
+    public static ArrayList<String> fetchData(String urlString) {
         ArrayList<String> linkList = new ArrayList<String>();
         URL url;
         URLConnection uc;
-        String urlString;
         BufferedReader in;
         String[] userAgent = {"Mozilla/5.0 (Windows NT 6.0; rv:33.0) Gecko/20100101 Firefox/33.0",
                               "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:21.0) Gecko/20100101 Firefox/21.0",
@@ -30,8 +29,6 @@ public class Dba
                               "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/600.1.25 (KHTML, like Gecko) Version/8.0 Safari/600.1.25",
                               "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)"};
         try {
-            urlString = "http://www.dba.dk/billetter/billetter-til-sport-musik-og-kultur/koncerter-og-festivaler/?soeg=smukfest";
-            System.out.println(urlString);
             url = new URL(urlString);
             uc = url.openConnection();
             uc.addRequestProperty("User-Agent", userAgent[0]);
