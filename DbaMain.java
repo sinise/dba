@@ -1,4 +1,5 @@
 
+
 import java.net.*;
 import java.io.*;
 import java.awt.Toolkit;
@@ -7,50 +8,65 @@ import java.text.SimpleDateFormat;
 
 public class DbaMain implements Runnable {
     String urlString;
-    DbaMain(String urlString){
+    String thread;
+    DbaMain(String urlString, String thread){
         this.urlString = urlString;
+        this.thread = thread;
+
     }
 
-    public void run() {
+public void run() {
+    ArrayList<String> linkStart = Dba.fetchData(urlString);
+    while(true){
 
-        ArrayList<String> linkStart = Dba.fetchData(urlString);
-        while(true){
+        ArrayList<String> linkCmp = Dba.fetchData(urlString);
+        ArrayList<String> linkNew = new ArrayList<String>();
+//            System.out.println("Thread sleep 15 sec");
+//            System.out.println(urlString);
+//            System.out.println("");
+        boolean foundNew = false;
 
-            ArrayList<String> linkCmp = Dba.fetchData(urlString);
-            System.out.println("Thread sleep 15 sec");
-            System.out.println(urlString);
-            System.out.println("");
-            try{
-                Thread.sleep(15000);
-            } catch (Exception e) {
-            }
-            System.out.println("Done");
-            boolean foundNew = false;
-            for(int i = 0; i < linkStart.size(); i++){
-                String one = linkStart.get(i);
-                String two = linkCmp.get(i);
-/*                  System.out.println();
-                    System.out.println(one);
-                    System.out.println(two);
-*/
-                if(!(one.equals(two))){
-                    foundNew = true;
+        for(int i = 0; i < linkCmp.size(); i++){
+            if(!(linkStart.contains(linkCmp.get(i)))){
+                if(linkCmp.get(i).contains("soeger")){
+                    linkStart.add(linkCmp.get(i));
                 }
-
+                else {
+                    foundNew = true;
+                    linkNew.add(linkCmp.get(i));
+                }
             }
-            if(foundNew){
-                System.out.println("Theres a new record");
-            }
-                System.out.println("Theres no new record");
-
         }
-    }
 
+        try{
+            if(foundNew){
+                for(int i = 0; i < linkNew.size(); i++){
+                    System.out.println(linkNew.get(i));
+                    System.out.println("Found a new post by thread  " + thread);
+                }
+                Process p = Runtime.getRuntime().exec("vlc dad.mp3");
+
+            }
+            else {
+                System.out.println("no new post found by thread " + thread);
+            }
+        }
+        catch (IOException e) {
+            System.out.println("exception happened - here's what I know: ");
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        try{
+            Thread.sleep(15000);
+        }
+        catch (Exception e) {}
+    }
+}
     public static void main(String[] args) throws Exception {
         String urlString1 = "http://www.dba.dk/billetter/billetter-til-sport-musik-og-kultur/koncerter-og-festivaler/?soeg=smukfest";
         String urlString2 = "http://www.dba.dk/billetter/billetter-til-sport-musik-og-kultur/koncerter-og-festivaler/?soeg=skanderborg";
-        (new Thread(new DbaMain(urlString1))).start();
-        (new Thread(new DbaMain(urlString2))).start();
+        (new Thread(new DbaMain(urlString1,  "smukfest"))).start();
+        (new Thread(new DbaMain(urlString2, "skanderborg"))).start();
     }
 
 }
