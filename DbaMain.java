@@ -28,7 +28,7 @@ public void run() {
 
         for(int i = 0; i < linkCmp.size(); i++){
             if(!(linkStart.contains(linkCmp.get(i)))){
-                if(linkCmp.get(i).contains("soeger")){
+                if(linkCmp.get(i).contains("soeger") || linkCmp.get(i).contains("koebes")){
                     linkStart.add(linkCmp.get(i));
                 }
                 else {
@@ -42,13 +42,14 @@ public void run() {
             if(foundNew){
                 for(int i = 0; i < linkNew.size(); i++){
                     System.out.println(linkNew.get(i));
+                    linkStart.add(linkNew.get(i));
                     System.out.println("Found a new post by thread  " + thread);
                 }
+                foundNew = false;
                 Process p = Runtime.getRuntime().exec("vlc dad.mp3");
-
             }
             else {
-                System.out.println("no new post found by thread " + thread);
+                System.out.println("No new post in  " + thread);
             }
         }
         catch (IOException e) {
